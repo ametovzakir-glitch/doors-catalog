@@ -30,20 +30,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      
+        
       - name: Extract catalog
         run: |
           mkdir -p site extracted
           unzip -q catalog_doors_site.zip -d extracted
-          cp -a extracted/catalog_doors_site/. site/
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
+          INDEX_FILE="$(find extracted -type f -name index.html -print -quit)"
+          if [ -z "$INDEX_FILE" ]; then
+            echo "index.html not found in archive"
+            exit 1
+          fi
+          SITE_DIR="$(dirname "$INDEX_FILE")"
+          cp -a "$SITE_DIR/." site/
