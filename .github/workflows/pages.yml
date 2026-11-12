@@ -30,8 +30,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      
-        
       - name: Extract catalog
         run: |
           mkdir -p site extracted
@@ -43,3 +41,15 @@ jobs:
           fi
           SITE_DIR="$(dirname "$INDEX_FILE")"
           cp -a "$SITE_DIR/." site/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
